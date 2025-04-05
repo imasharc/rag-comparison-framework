@@ -1,0 +1,52 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.env/
+
+# Environment variables
+.env
+.flaskenv
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Project specific
+data/vector_store/
+*.faiss
+*.pkl
+*.model
+*.bin
+
+# Logs
+logs/
+*.log
+
+# Documentation builds
+_build/
+docs/build/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Windows specific
+Thumbs.db
+ehthumbs.db

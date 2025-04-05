@@ -1,0 +1,20 @@
+# Core dependencies
+flask
+flask-cors
+openai
+streamlit
+python-dotenv
+requests
+
+# RAG and document processing
+langchain
+langchain-openai
+langchain-community
+pdfplumber
+tiktoken
+pypdf
+faiss-cpu
+numpy
+
+# Testing
+pytest
