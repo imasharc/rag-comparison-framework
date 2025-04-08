@@ -1,0 +1,293 @@
+question,variant,response,metric_faithfulness,metric_completeness,metric_citation,metric_context_relevance,metric_answer_relevance,metric_coherence,metric_average,discriminator_overall,evaluation_details
+What is NovaTech's password policy?,Baseline RAG,"NovaTech's password policy includes the following requirements:
+
+- Passwords must be changed every 90 days through an automated password management system.
+- A password history of 12 previous passwords is maintained to prevent reuse.
+- All passwords must be stored in encrypted format using industry-standard hashing algorithms (SHA-256 minimum).
+- Password requirements are as follows:
+  - Minimum 12 characters
+  - At least one uppercase letter
+  - At least one lowercase letter
+  - At least one number",10.0,10.0,0.0,10.0,10.0,10.0,8.333333333333334,9.8,"1. **Policy Accuracy (10/10)**: The response accurately reflects NovaTech's password policy as outlined in the context information. It lists all the specific requirements, including the password change frequency, history maintenance, encryption standards, and character requirements. There are no inaccuracies or omissions in the details provided.
+
+2. **Completeness (10/10)**: The response is thorough and covers all aspects of the password policy mentioned in the context. It includes every requirement without leaving out any critical details, ensuring that an employee would have a complete understanding of the policy.
+
+3. **Policy Relevance (10/10)**: The response is directly relevant to the question asked about NovaTech's password policy. It addresses the specific elements of the policy without diverging into unrelated topics, making it highly pertinent to the inquiry.
+
+4. **Clarity & Structure (9/10)**: The response is well-organized and easy to follow, with a clear list format that enhances readability. However, it could benefit from a brief introductory sentence that contextualizes the information, such as ""Here are the key requirements of NovaTech's password policy.""
+
+5. **Actionability (10/10)**: The response is highly actionable, providing clear and specific guidelines that an employee can follow. It lays out the requirements in a straightforward manner, making it easy for employees to understand what is expected of them regarding password management.
+
+**Overall Assessment**: The response effectively conveys NovaTech's password policy in a precise and comprehensive manner. It accurately reflects the requirements, ensuring that employees have all the necessary information to comply with the policy. The clarity and structure of the response are strong, although a minor improvement could be made by adding an introductory sentence for context. Overall, this response would be very useful for an employee seeking to understand and adhere to the company's password policy.
+
+**Overall Score: 9.8/10**"
+What is NovaTech's password policy?,Query Expansion + Reranking,"NovaTech's password policy is designed to enhance security and includes the following key requirements:
+
+1. **Password Change Frequency**: Passwords must be changed every 90 days. This change is facilitated through an automated password management system to ensure compliance and ease of use.
+
+2. **Password History**: To prevent the reuse of passwords, NovaTech maintains a history of the last 12 passwords used by each user. This helps mitigate the risk of compromised passwords being reused.
+
+3. **Password Storage**: All passwords must be stored in an encrypted format, utilizing industry-standard hashing algorithms, with a minimum requirement of SHA-256. This ensures that even if password data is compromised, it remains secure.
+
+4. **Password Composition Requirements**: 
+   - Passwords must be a minimum of 12 characters long.
+   - Each password must include at least one uppercase letter, one lowercase letter, and one numeric digit. This complexity requirement is intended to enhance password strength and reduce susceptibility to attacks.
+
+By adhering to these guidelines, NovaTech aims to maintain a robust security posture regarding user authentication and password management.",10.0,10.0,0.0,10.0,10.0,10.0,8.333333333333334,9.8,"1. **Policy Accuracy (10/10)**: The response accurately reflects the key components of NovaTech's password policy as provided in the context information. Each requirement is correctly stated, including the frequency of password changes, the maintenance of password history, the encryption standards, and the specific composition requirements for passwords.
+
+2. **Completeness (10/10)**: The response thoroughly addresses all aspects of the password policy. It covers every requirement listed in the context, ensuring that the employee receives a comprehensive understanding of the policy without omitting any critical details.
+
+3. **Policy Relevance (10/10)**: The response is highly relevant to the specific question asked about NovaTech's password policy. It directly answers the inquiry by outlining the essential elements of the policy, making it clear that the information provided pertains specifically to password management.
+
+4. **Clarity & Structure (9/10)**: The response is well-organized, with each requirement clearly delineated in a numbered format. This structure aids in readability and comprehension. However, a minor improvement could be made by adding a brief introductory sentence to contextualize the importance of the password policy before diving into the specifics.
+
+5. **Actionability (10/10)**: The response is highly actionable for an employee needing to follow security procedures. It provides clear guidelines on what is expected regarding password management, making it easy for employees to understand their responsibilities and the rationale behind the policy.
+
+Overall Assessment: The response effectively communicates NovaTech's password policy, ensuring that employees have a clear and accurate understanding of the requirements they must follow. It is comprehensive, relevant, and structured in a way that enhances clarity. The only slight improvement could be the addition of a brief introduction to set the context, but this does not detract significantly from the overall quality of the response.
+
+Overall Score: 9.8/10"
+What is NovaTech's password policy?,Hybrid Search + Contextual Compression,"**NovaTech's Password Policy Overview**
+
+NovaTech has established a comprehensive password policy as part of its broader security policy framework to enhance authentication and access control measures within the organization. This policy outlines the requirements for password creation, management, and storage to ensure the security of user accounts and sensitive information.
+
+### Key Requirements of NovaTech's Password Policy
+
+1. **Password Change Frequency**:
+   - **Mandatory Change**: Passwords must be changed every **90 days**. This requirement helps mitigate the risk of unauthorized access due to compromised passwords that may remain unchanged for extended periods.
+
+2. **Password History**:
+   - **Reuse Prevention**: NovaTech maintains a history of **12 previous passwords** for each user. This prevents users from reusing old passwords, thereby enhancing security by reducing the likelihood of successful brute-force attacks or social engineering exploits.
+
+3. **Password Storage**:
+   - **Encryption Standards**: All passwords must be stored in an **encrypted format** using **SHA-256** or stronger algorithms. This ensures that even if password data is compromised, the actual passwords remain secure and unreadable.
+
+4. **Password Complexity**:
+   - **Minimum Length and Composition**: Passwords must be at least **12 characters long** and include:
+     - At least **one uppercase letter** (A-Z)
+     - At least **one lowercase letter** (a-z)
+     - At least **one number** (0-9)
+   This complexity requirement is designed to make passwords more resistant to guessing and brute-force attacks.
+
+### Importance of the Password Policy
+
+The password policy is a critical component of NovaTech's overall **security policy**, serving to enhance **authentication** processes and strengthen **access control** measures. By enforcing these requirements, NovaTech aims to protect sensitive data and maintain the integrity of its systems against unauthorized access.
+
+### Conclusion
+
+In summary, NovaTech's password policy is a well-structured approach to safeguarding user accounts and sensitive information through stringent requirements for password management. By mandating regular changes, preventing reuse, ensuring secure storage, and enforcing complexity, NovaTech effectively enhances its security posture in the face of evolving threats.",10.0,10.0,0.0,10.0,10.0,10.0,8.333333333333334,9.8,"### Evaluation Criteria
+
+1. **Policy Accuracy (10/10)**:
+   The response accurately reflects the specific requirements of NovaTech's password policy as outlined in the context information. It correctly states the need for password changes every 90 days, the maintenance of a password history of 12 previous passwords, and the requirement for passwords to be stored using SHA-256 or stronger encryption. Each aspect of the policy is presented correctly.
+
+2. **Completeness (10/10)**:
+   The response thoroughly addresses all aspects of the password policy, covering password change frequency, history, storage, and complexity requirements. Each section is detailed, ensuring that an employee would have a comprehensive understanding of the policy without needing additional information.
+
+3. **Policy Relevance (10/10)**:
+   The response is highly relevant to the question asked about NovaTech's password policy. It focuses exclusively on the password policy and does not include extraneous information, making it directly applicable to the employee's inquiry.
+
+4. **Clarity & Structure (9/10)**:
+   The response is well-organized, with clear headings and bullet points that enhance readability. Each section is logically structured, making it easy for the reader to follow. However, the introduction could be slightly more concise to improve clarity further.
+
+5. **Actionability (10/10)**:
+   The response provides actionable information that an employee can directly apply. It clearly outlines the requirements for creating and managing passwords, which is essential for compliance with the company's security policies. Employees would find this information useful for ensuring they meet the password policy requirements.
+
+### Overall Assessment
+
+The response to the question about NovaTech's password policy is exemplary, scoring high across all evaluation criteria. It accurately reflects the policy details, is complete in its coverage of all relevant aspects, and maintains a clear and structured format that enhances understanding. The actionable nature of the content ensures that employees can easily implement the policy requirements in their daily activities.
+
+Overall, this response serves as an excellent resource for employees seeking to understand and comply with NovaTech's password policy, providing them with the necessary information in a clear and organized manner. 
+
+**Overall Score: 9.8/10**"
+What is NovaTech's password policy?,Adaptive Chunking + Self-Query,"### NovaTech's Password Policy
+
+NovaTech's password policy is designed to ensure the security and integrity of user accounts by enforcing stringent password requirements and management procedures. Below is a detailed overview of the key aspects of the policy.
+
+#### Password Complexity Requirements
+To enhance security, NovaTech mandates that all passwords adhere to specific complexity requirements:
+- **Minimum Length**: Passwords must be at least **12 characters** long.
+- **Character Variety**: Each password must include:
+  - At least **one uppercase letter** (A-Z)
+  - At least **one lowercase letter** (a-z)
+  - At least **one number** (0-9)
+  - At least **one special character** (e.g., !@#$%^&*)
+- **Prohibited Elements**: The use of dictionary words or common patterns is strictly forbidden to mitigate the risk of easy guesswork.
+
+#### Password Change Frequency
+To further safeguard accounts, NovaTech requires that passwords be changed every **90 days**. This is facilitated through an **automated password management system**, which streamlines the process for users.
+
+#### Password History and Reuse Prevention
+To prevent the reuse of old passwords, NovaTech maintains a **password history** that tracks the last **12 passwords** used by each account. This measure is crucial in ensuring that users do not revert to previous passwords, thereby enhancing overall security.
+
+#### Password Storage and Encryption
+All passwords are required to be stored in an **encrypted format**, utilizing industry-standard hashing algorithms, with a minimum of **SHA-256**. This encryption is essential for protecting passwords against unauthorized access and breaches.
+
+#### Password Reset Procedures
+While the policy does not detail specific procedures for password recovery, it does state that password resets are enforced on shared systems when an employee's employment is terminated. This precaution helps to secure the organization’s data by ensuring that former employees cannot access sensitive information.
+
+In summary, NovaTech's password policy is comprehensive, emphasizing complexity, regular updates, historical tracking, and secure storage to protect user accounts and sensitive information effectively. For further details or specific procedural inquiries, additional resources or policies may need to be consulted.",5.0,10.0,5.0,10.0,10.0,10.0,8.333333333333334,8.4,"### Evaluation of the Response
+
+1. **Policy Accuracy (9/10)**: 
+   The response accurately reflects NovaTech's password policy, including the requirements for password complexity, change frequency, history, and storage. However, it incorrectly includes ""at least one special character"" as a requirement, which is not mentioned in the context information provided. This slight inaccuracy affects the overall score.
+
+2. **Completeness (8/10)**: 
+   The response covers most aspects of the password policy, including complexity requirements, change frequency, history, and encryption. However, it lacks a detailed explanation of the password reset procedures, which could be important for employees needing to understand the full scope of the policy.
+
+3. **Policy Relevance (10/10)**: 
+   The response is highly relevant to the question about NovaTech's password policy. It directly addresses the specific components of the policy and provides a structured overview that aligns well with the context information.
+
+4. **Clarity & Structure (9/10)**: 
+   The response is well-organized, with clear headings and bullet points that make it easy to read and understand. The use of subheadings helps to guide the reader through the different aspects of the policy. The minor deduction is due to the inclusion of unnecessary details about prohibited elements, which could be streamlined.
+
+5. **Actionability (8/10)**: 
+   The response provides useful information that an employee can follow regarding password requirements and management. However, the lack of specific procedures for password recovery or reset could hinder an employee's ability to take immediate action if they forget their password or need to reset it.
+
+### Overall Assessment
+The response provides a thorough overview of NovaTech's password policy, effectively communicating the key components that employees need to understand. While it is mostly accurate and relevant, the inclusion of an incorrect requirement and the omission of specific password reset procedures slightly detracts from its overall effectiveness. The clarity and structure of the response are commendable, making it easy for employees to digest the information.
+
+Overall, this response serves as a solid foundation for understanding NovaTech's password policy, but it could be improved by correcting inaccuracies and providing more comprehensive details on password recovery procedures. 
+
+**Overall Score: 8.4/10**"
+What is NovaTech's password policy?,Chain-of-Thought RAG,"NovaTech's password policy mandates the following requirements for all users:
+
+- Passwords must be changed every 90 days through an automated password management system.
+- A history of the last 12 passwords is maintained to prevent reuse.
+- Passwords must be stored in an encrypted format using industry-standard hashing algorithms, with a minimum of SHA-256.
+- Each password must meet the following criteria:
+  - A minimum length of 12 characters.
+  - At least one uppercase letter.
+  - At least one lowercase letter.
+  - At least one number.
+
+These requirements are designed to ensure the security and integrity of user accounts and sensitive information. For further details, refer to the specific sections of the security policy that outline password management and encryption standards.",10.0,10.0,5.0,10.0,10.0,10.0,9.166666666666666,9.8,"1. **Policy Accuracy (10/10)**: The response accurately reflects the specific requirements of NovaTech's password policy as outlined in the context information. It correctly states the need for password changes every 90 days, the maintenance of a password history of 12 previous passwords, and the requirement for passwords to be stored using SHA-256 or higher encryption. 
+
+2. **Completeness (10/10)**: The response thoroughly addresses all aspects of the password policy question. It includes every requirement mentioned in the context, ensuring that the employee receives a full picture of what is expected regarding password management.
+
+3. **Policy Relevance (10/10)**: The response is highly relevant to the specific question asked about NovaTech's password policy. It directly answers the query without deviating from the topic, ensuring that the employee receives pertinent information.
+
+4. **Clarity & Structure (9/10)**: The response is well-organized and easy to read, with clear bullet points that outline the policy requirements. However, it could benefit from a brief introductory sentence summarizing the importance of the password policy before diving into the specifics.
+
+5. **Actionability (10/10)**: The response is very actionable for an employee needing to follow security procedures. It provides clear guidelines on what is required for password creation and management, making it easy for employees to understand and comply with the policy.
+
+**Overall Assessment**: The response effectively communicates NovaTech's password policy, providing accurate, complete, and relevant information in a clear and structured manner. It serves as a practical guide for employees, ensuring they understand the requirements for password management. The only minor improvement could be the addition of a summary statement to enhance clarity. Overall, this response is exemplary in addressing the security policy question.
+
+**Overall Score: 9.8/10**"
+What is NovaTech's password policy?,Few-Shot RAG,"According to NovaTech's Security Policy (Section: Password Policy), the company enforces a robust password policy to ensure the security of user accounts and sensitive information. The key requirements of this policy are as follows:
+
+1. **Password Change Frequency**: 
+   - Passwords must be changed every 90 days through the automated password management system.
+
+2. **Password History**: 
+   - A history of the last 12 passwords is maintained to prevent reuse, ensuring that users cannot revert to their previous passwords.
+
+3. **Password Storage**: 
+   - All passwords must be stored in an encrypted format utilizing industry-standard hashing algorithms, with SHA-256 being the minimum requirement.
+
+4. **Password Composition Requirements**: 
+   - Passwords must meet the following criteria:
+     - Minimum of 12 characters in length.
+     - At least one uppercase letter (A-Z).
+     - At least one lowercase letter (a-z).
+     - At least one number (0-9).
+
+These requirements are documented in the Security Policy document NTD-SEC-001-2025 (version 3.2), which was approved by CEO Michael Rodriguez and is effective as of February 1, 2025.",8.0,10.0,10.0,10.0,10.0,10.0,9.666666666666666,9.8,"### Evaluation Criteria
+
+1. **Policy Accuracy (10/10)**: 
+   The response accurately reflects NovaTech's password policy as outlined in the context information. Each requirement is correctly stated, including the frequency of password changes, the maintenance of password history, and the specifics of password storage and composition. For example, the mention of SHA-256 as the minimum hashing algorithm aligns perfectly with the provided policy details.
+
+2. **Completeness (10/10)**: 
+   The response thoroughly addresses all aspects of the password policy. It covers every requirement listed in the context, ensuring that an employee receives a comprehensive understanding of what is expected regarding password management. The inclusion of the document reference (NTD-SEC-001-2025) adds to the completeness by guiding employees to the official source.
+
+3. **Policy Relevance (10/10)**: 
+   The response is highly relevant to the specific question about NovaTech's password policy. It directly answers the inquiry by listing and explaining the key components of the policy without deviating into unrelated topics. This focus ensures that the employee receives pertinent information without distraction.
+
+4. **Clarity & Structure (9/10)**: 
+   The response is well-organized and easy to follow, with clear headings and bullet points that enhance readability. Each section is distinctly marked, allowing for quick reference. However, a minor improvement could be made by slightly simplifying the language in some areas to ensure it is accessible to all employees, regardless of their familiarity with technical terms.
+
+5. **Actionability (10/10)**: 
+   This response is highly actionable for employees needing to follow security procedures. It provides clear guidelines on what is required for password management, making it easy for employees to understand and implement the policy in their daily operations. The reference to the specific document and its approval adds authority to the instructions.
+
+### Overall Assessment
+
+The response to NovaTech's password policy question is exemplary in its accuracy, completeness, relevance, clarity, and actionability. It effectively communicates the essential elements of the password policy, ensuring that employees can easily understand and comply with the requirements. The structured format enhances the overall readability, while the inclusion of specific details, such as the document reference and approval, adds credibility and encourages adherence to the policy.
+
+Overall, this response serves as an excellent resource for employees seeking to understand and follow NovaTech's password policy, providing them with all necessary information in a clear and organized manner. 
+
+**Overall Score: 9.8/10**"
+What is NovaTech's password policy?,Role-Based + Self-Verification RAG,"### Verification Process
+
+1. **Accuracy Check**: 
+   - The response accurately reflects the password policy details as provided in the original source. All specified requirements, such as password change frequency, history, storage, and composition requirements, are correctly stated.
+
+2. **Completeness Check**: 
+   - The response addresses all aspects of the question regarding NovaTech's password policy, including the rationale behind the policy and implementation guidance.
+
+3. **Source Validation**: 
+   - The response references the security policy document (Document ID: NTD-SEC-001-2025) as the source of the information, which is appropriate.
+
+4. **Correction**: 
+   - No inaccuracies or omissions were found in the response. It is complete and properly sourced.
+
+### Final Response
+
+Dear Team Member,
+
+Thank you for your inquiry regarding NovaTech's password policy as outlined in our security policy document (Document ID: NTD-SEC-001-2025). It is crucial for all employees to understand and adhere to our password management practices to safeguard our information assets.
+
+### Password Policy Overview
+
+1. **Password Change Frequency**: 
+   - Passwords must be changed every **90 days**. This requirement is enforced through an **automated password management system** that facilitates timely updates and reduces the risk of password compromise over time.
+
+2. **Password History**:
+   - To mitigate the risk of password reuse, we maintain a history of the **last 12 passwords**. This ensures that users cannot revert to previously used passwords, thereby enhancing the overall security posture.
+
+3. **Password Storage**:
+   - All passwords must be stored in an **encrypted format**. We utilize industry-standard hashing algorithms, with a minimum requirement of **SHA-256**. This ensures that even if password data is compromised, it remains secure and unreadable.
+
+4. **Password Composition Requirements**:
+   - Passwords must adhere to the following criteria:
+     - A **minimum length of 12 characters**.
+     - At least **one uppercase letter**.
+     - At least **one lowercase letter**.
+     - At least **one number**.
+   - These requirements are designed to enhance complexity, making it significantly more difficult for attackers to successfully execute brute-force or dictionary attacks.
+
+### Rationale Behind the Policy
+
+The rationale for these requirements is grounded in best practices for cybersecurity and compliance with standards such as **ISO 27001** and **SOC 2**. Regular password changes and complexity requirements help mitigate risks associated with unauthorized access and data breaches. By enforcing a robust password policy, we not only protect our sensitive data but also comply with regulations like **GDPR**, which mandates the protection of personal data.
+
+### Implementation
+
+To comply with this policy, please ensure that:
+- You utilize the automated password management system provided by NovaTech for changing your passwords.
+- You follow the specified password composition guidelines when creating or updating your passwords.
+- If you have any questions or need assistance with the password management system, do not hesitate to reach out to the IT support team.
+
+Thank you for your commitment to maintaining the security of our systems. If you have any further questions or need clarification on any aspect of our security policy, please feel free to ask.
+
+Best regards,
+
+Sarah Chen  
+Chief Information Security Officer  
+NovaTech Dynamics",10.0,10.0,10.0,10.0,10.0,10.0,10.0,0.0,"### Evaluation of the Response
+
+1. **Policy Accuracy (10/10)**: 
+   - The response accurately reflects all aspects of NovaTech's password policy as outlined in the context information. It correctly states the password change frequency, the history of previous passwords, the encryption standards, and the specific composition requirements for passwords. For example, it mentions the need for a minimum of 12 characters and the inclusion of uppercase, lowercase letters, and numbers.
+
+2. **Completeness (10/10)**: 
+   - The response thoroughly addresses all aspects of the password policy question. It not only lists the requirements but also provides a rationale for the policy and implementation guidance, ensuring that the employee understands both the ""what"" and the ""why"" behind the policy.
+
+3. **Policy Relevance (10/10)**: 
+   - The response is highly relevant to the specific question about NovaTech's password policy. It directly answers the inquiry by providing a comprehensive overview of the policy, including all required elements without deviating from the topic.
+
+4. **Clarity & Structure (9/10)**: 
+   - The response is well-organized, with clear headings and a logical flow that makes it easy to follow. Each section is clearly delineated, which aids in understanding. However, the initial ""Verification Process"" section could be streamlined or omitted to enhance clarity, as it may not be necessary for the employee seeking straightforward information.
+
+5. **Actionability (10/10)**: 
+   - The response is highly actionable, providing specific steps for employees to follow to comply with the password policy. It encourages employees to use the automated password management system and offers assistance from the IT support team, making it clear what actions they need to take.
+
+### Overall Assessment
+
+The response to the security policy question regarding NovaTech's password policy is exemplary. It provides accurate, complete, and relevant information that is well-structured and easy to understand. The inclusion of a rationale for the policy enhances the employee's understanding of its importance, while the actionable guidance empowers them to comply effectively.
+
+Overall, this response serves as a strong resource for employees seeking to understand and adhere to the company's password policy, ensuring they are equipped with the necessary information to maintain security standards. The overall score for this response is **9.8/10**."

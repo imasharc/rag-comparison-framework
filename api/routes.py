@@ -113,3 +113,45 @@ def configure_api():
     except Exception as e:
         logger.error(f"Error configuring API key: {str(e)}")
         raise BadRequestError(f"Invalid API key: {str(e)}")
+
+@api_bp.route('/complete', methods=['POST'])
+@api_error_handler
+def complete_text():
+    """
+    Generate text using the OpenAI API.
+    
+    Returns:
+        Dict[str, str]: Response with generated text
+        
+    Raises:
+        BadRequestError: If required parameters are missing
+    """
+    # Extract data from request
+    data = request.json
+    system_prompt = data.get('system_prompt', '')
+    user_prompt = data.get('user_prompt', '')
+    temperature = data.get('temperature', 0.7)
+    max_tokens = data.get('max_tokens', 500)
+    
+    if not system_prompt or not user_prompt:
+        raise BadRequestError("System prompt and user prompt are required")
+    
+    # Get the OpenAI service from the application context
+    openai_service = current_app.config.get('OPENAI_SERVICE')
+    
+    if not openai_service:
+        logger.error("OpenAI service not found in application context")
+        raise NotFoundError("OpenAI service not available")
+    
+    # Generate text
+    try:
+        text = openai_service.generate_text(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            temperature=temperature,
+            max_tokens=max_tokens
+        )
+        return jsonify({'text': text})
+    except Exception as e:
+        logger.error(f"Error generating text: {str(e)}")
+        raise BadRequestError(f"Error generating text: {str(e)}")

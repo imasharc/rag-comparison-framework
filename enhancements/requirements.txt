@@ -1,0 +1,15 @@
+# Base dependencies
+requests>=2.28.0
+pandas>=1.4.0
+numpy>=1.22.0
+streamlit>=1.18.0
+plotly>=5.10.0
+tabulate>=0.8.10
+
+# For data handling and visualization
+matplotlib>=3.5.0
+seaborn>=0.11.2
+
+# Time delay and utility
+python-dateutil>=2.8.2
+pytz>=2022.1
