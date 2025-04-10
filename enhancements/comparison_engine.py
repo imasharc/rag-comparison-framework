@@ -5,7 +5,7 @@ import logging
 import pandas as pd
 import os
 import time
-from typing import List, Dict, Any, Optional, Tuple
+from typing import List, Dict, Any, Optional, Tuple, Callable
 from datetime import datetime
 
 from rag_client import RAGClient
@@ -26,6 +26,23 @@ logger = logging.getLogger(__name__)
 
 class RAGComparisonEngine:
     """Engine for comparing different RAG approaches."""
+    
+    # Descriptions of each RAG variant
+    VARIANT_DESCRIPTIONS = {
+        "Baseline RAG": "The standard RAG implementation that retrieves relevant document chunks and generates responses using the retrieved context.",
+        
+        "Query Expansion + Reranking": "Expands the original query into multiple related queries to improve retrieval coverage, then reranks the combined results based on relevance to the original question.",
+        
+        "Hybrid Search + Contextual Compression": "Combines semantic (vector-based) search with keyword search to find more relevant documents, then compresses the retrieved context to focus on the most important information.",
+        
+        "Adaptive Chunking + Self-Query": "Dynamically adjusts document chunking based on content semantics and uses the model to generate refined versions of the query that target specific aspects of the question.",
+        
+        "Chain-of-Thought RAG": "Guides the language model through an explicit step-by-step reasoning process, encouraging it to carefully consider each aspect of the security policy before generating a final answer.",
+        
+        "Few-Shot RAG": "Provides the model with carefully selected examples of high-quality question-answer pairs about security policies, helping it learn the expected format and level of detail.",
+        
+        "Role-Based + Self-Verification RAG": "Assigns the model a specific expert role (security officer) and includes a verification step where the model checks its own response for accuracy and completeness."
+    }
     
     def __init__(self, base_url: str = "http://127.0.0.1:5000/api"):
         """
@@ -69,6 +86,28 @@ class RAGComparisonEngine:
         """
         return [variant.get_name() for variant in self.variants]
     
+    def get_variant_description(self, variant_name: str) -> str:
+        """
+        Get the description of a specific RAG variant.
+        
+        Args:
+            variant_name (str): The name of the variant
+            
+        Returns:
+            str: Description of the variant
+        """
+        return self.VARIANT_DESCRIPTIONS.get(variant_name, "No description available.")
+    
+    def get_all_variant_descriptions(self) -> Dict[str, str]:
+        """
+        Get descriptions for all RAG variants.
+        
+        Returns:
+            Dict[str, str]: Dictionary mapping variant names to descriptions
+        """
+        return {variant.get_name(): self.get_variant_description(variant.get_name()) 
+                for variant in self.variants}
+    
     def query_with_variant(self, question: str, variant_name: str) -> str:
         """
         Query with a specific variant.
@@ -89,21 +128,26 @@ class RAGComparisonEngine:
         logger.warning(f"Variant '{variant_name}' not found, using baseline")
         return self.baseline.query(question)
     
-    def query_all_variants(self, question: str) -> Dict[str, str]:
+    def query_all_variants(self, question: str, progress_callback: Optional[Callable[[str, float], None]] = None) -> Dict[str, str]:
         """
         Query with all variants.
         
         Args:
             question (str): The question to answer
+            progress_callback: Optional callback function to report progress
             
         Returns:
             Dict[str, str]: A dictionary mapping variant names to responses
         """
         results = {}
+        total_variants = len(self.variants)
         
-        for variant in self.variants:
+        for i, variant in enumerate(self.variants):
             try:
                 name = variant.get_name()
+                if progress_callback:
+                    progress_callback(f"Generating response using {name}", i / total_variants)
+                
                 logger.info(f"Generating response from {name}")
                 response = variant.query(question)
                 results[name] = response
@@ -112,13 +156,20 @@ class RAGComparisonEngine:
                 # Add a small delay to avoid rate limiting
                 time.sleep(1)
                 
+                if progress_callback:
+                    progress_callback(f"Completed {name}", (i + 1) / total_variants)
+                
             except Exception as e:
                 logger.error(f"Error with variant {variant.get_name()}: {str(e)}")
                 results[variant.get_name()] = f"Error: {str(e)}"
         
+        if progress_callback:
+            progress_callback("All variants completed", 1.0)
+            
         return results
     
-    def evaluate_response(self, question: str, response: str, context: Optional[str] = None) -> Dict[str, Any]:
+    def evaluate_response(self, question: str, response: str, context: Optional[str] = None,
+                         progress_callback: Optional[Callable[[str, float], None]] = None) -> Dict[str, Any]:
         """
         Evaluate a response.
         
@@ -126,42 +177,64 @@ class RAGComparisonEngine:
             question (str): The original question
             response (str): The generated response
             context (Optional[str]): The context used for generation
+            progress_callback: Optional callback function to report progress
             
         Returns:
             Dict[str, Any]: A dictionary with evaluation results
         """
+        if progress_callback:
+            progress_callback("Starting evaluation metrics", 0.0)
+            
         # Get evaluation metrics
         metrics = self.evaluator.evaluate_all_metrics(question, response, context)
         
+        if progress_callback:
+            progress_callback("Computing discriminator evaluation", 0.5)
+            
         # Get discriminator evaluation
         discriminator = self.discriminator.evaluate(question, response, context)
         
+        if progress_callback:
+            progress_callback("Evaluation complete", 1.0)
+            
         # Combine results
         return {
             "metrics": metrics,
             "discriminator": discriminator
         }
     
-    def evaluate_all_variants(self, question: str) -> pd.DataFrame:
+    def evaluate_all_variants(self, question: str, 
+                             progress_callback: Optional[Callable[[str, float], None]] = None) -> pd.DataFrame:
         """
         Evaluate all variants for a question.
         
         Args:
             question (str): The question to answer
+            progress_callback: Optional callback function to report progress
             
         Returns:
             pd.DataFrame: A dataframe with evaluation results
         """
         results = []
         
+        # Report initial progress
+        if progress_callback:
+            progress_callback("Starting variant query process", 0.0)
+        
         # Get responses from all variants
-        responses = self.query_all_variants(question)
+        responses = self.query_all_variants(question, 
+                                          lambda msg, prog: progress_callback(msg, prog * 0.4) if progress_callback else None)
         
         # Get baseline response for context
         baseline_response = responses.get(self.baseline.get_name(), "")
         
         # Evaluate each response
-        for variant_name, response in responses.items():
+        total_variants = len(responses)
+        for i, (variant_name, response) in enumerate(responses.items()):
+            if progress_callback:
+                progress_callback(f"Evaluating {variant_name} ({i+1}/{total_variants})", 
+                                0.4 + (i / total_variants) * 0.6)
+            
             logger.info(f"Evaluating response from {variant_name}")
             evaluation = self.evaluate_response(question, response, baseline_response)
             
@@ -194,14 +267,20 @@ class RAGComparisonEngine:
         
         # Create a dataframe
         df = pd.DataFrame(results)
+        
+        if progress_callback:
+            progress_callback("Evaluation complete", 1.0)
+            
         return df
     
-    def run_benchmark(self, questions: List[str]) -> pd.DataFrame:
+    def run_benchmark(self, questions: List[str], 
+                     progress_callback: Optional[Callable[[str, float, Dict[str, Any]], None]] = None) -> pd.DataFrame:
         """
         Run a benchmark on a list of questions.
         
         Args:
             questions (List[str]): The questions to benchmark
+            progress_callback: Optional callback function to report progress and additional data
             
         Returns:
             pd.DataFrame: A dataframe with benchmark results
@@ -210,10 +289,26 @@ class RAGComparisonEngine:
         total_questions = len(questions)
         
         for i, question in enumerate(questions, 1):
+            question_progress = (i - 1) / total_questions
             logger.info(f"Processing question {i}/{total_questions}: {question}")
             
+            if progress_callback:
+                progress_callback(
+                    f"Processing question {i}/{total_questions}",
+                    question_progress,
+                    {"current_question": question, "question_num": i, "total_questions": total_questions}
+                )
+            
             # Evaluate all variants for this question
-            results = self.evaluate_all_variants(question)
+            results = self.evaluate_all_variants(
+                question,
+                lambda msg, prog: progress_callback(
+                    msg, 
+                    question_progress + prog / total_questions,
+                    {"current_question": question, "question_num": i, "total_questions": total_questions}
+                ) if progress_callback else None
+            )
+            
             all_results.append(results)
             
             # Save intermediate results
@@ -222,6 +317,14 @@ class RAGComparisonEngine:
             intermediate_df.to_csv(f"results/benchmark_intermediate_{timestamp}.csv", index=False)
             
             logger.info(f"Completed question {i}/{total_questions}")
+            
+            if progress_callback:
+                progress_callback(
+                    f"Completed question {i}/{total_questions}",
+                    i / total_questions,
+                    {"current_question": question, "question_num": i, "total_questions": total_questions, 
+                     "completed": True}
+                )
         
         # Combine all results
         benchmark_df = pd.concat(all_results, ignore_index=True)
@@ -230,6 +333,9 @@ class RAGComparisonEngine:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         benchmark_df.to_csv(f"results/benchmark_final_{timestamp}.csv", index=False)
         
+        if progress_callback:
+            progress_callback("Benchmark complete", 1.0, {"completed": True})
+            
         return benchmark_df
     
     def run_discriminator_comparison(self, question: str, responses: Optional[Dict[str, str]] = None) -> Dict[str, Any]:
@@ -303,7 +409,9 @@ class RAGComparisonEngine:
         
         # Add each response
         for variant_name, response in responses.items():
-            report += f"### {variant_name}\n\n{response}\n\n"
+            # Include the variant description
+            description = self.get_variant_description(variant_name)
+            report += f"### {variant_name}\n\n**Description**: {description}\n\n{response}\n\n"
         
         # Add metrics table
         report += "## Evaluation Metrics\n\n"

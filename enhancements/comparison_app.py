@@ -64,6 +64,151 @@ st.markdown("""
         padding: 1rem;
         margin-bottom: 1rem;
     }
+    .variant-description {
+        background-color: #eaf4ff;
+        border-radius: 0.5rem;
+        padding: 0.8rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid #0077ff;
+        font-style: italic;
+    }
+    .progress-detail {
+        font-size: 0.9rem;
+        margin-top: 0.2rem;
+        color: #4a4a4a;
+    }
+    .stage-tracker {
+        margin-top: 1rem;
+        padding: 0.5rem;
+        background-color: #f9f9f9;
+        border-radius: 0.5rem;
+        border: 1px solid #e0e0e0;
+    }
+    .info-box {
+        background-color: #e8f4f9;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid #1e88e5;
+    }
+    /* Additional CSS for the animation */
+    .thinking-animation {
+        width: 100%;
+        height: 160px;
+        background-color: #f0f7ff;
+        border-radius: 10px;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .brain {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        background-color: #6c8ebf;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+        box-shadow: 0 0 20px rgba(108, 142, 191, 0.7);
+    }
+    
+    .connection {
+        position: absolute;
+        width: 200px;
+        height: 2px;
+        background: linear-gradient(90deg, #6c8ebf, transparent);
+        animation: flow 1.5s infinite;
+    }
+    
+    .connection-1 {
+        top: 50px;
+        transform: rotate(30deg);
+    }
+    
+    .connection-2 {
+        top: 80px;
+        transform: rotate(-10deg);
+    }
+    
+    .connection-3 {
+        top: 110px;
+        transform: rotate(10deg);
+    }
+    
+    .document {
+        position: absolute;
+        width: 40px;
+        height: 50px;
+        background-color: white;
+        border-radius: 3px;
+        right: 30px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .document-1 {
+        top: 30px;
+        animation: float 3s infinite;
+    }
+    
+    .document-2 {
+        top: 90px;
+        animation: float 3s infinite 0.5s;
+    }
+    
+    .document-line {
+        position: absolute;
+        width: 30px;
+        height: 2px;
+        background-color: #ccc;
+        left: 5px;
+    }
+    
+    .line-1 { top: 10px; }
+    .line-2 { top: 15px; }
+    .line-3 { top: 20px; }
+    .line-4 { top: 25px; }
+    
+    .thinking-text {
+        position: absolute;
+        bottom: 10px;
+        color: #555;
+        font-weight: bold;
+        font-size: 14px;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    
+    @keyframes flow {
+        0% { opacity: 0; width: 0; }
+        50% { opacity: 1; width: 200px; }
+        100% { opacity: 0; width: 0; }
+    }
+    
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
+        100% { transform: translateY(0px); }
+    }
+    
+    .thinking-dots:after {
+        content: ' .';
+        animation: dots 1.5s steps(5, end) infinite;
+    }
+    
+    @keyframes dots {
+        0%, 20% { color: rgba(0,0,0,0); text-shadow: 0.3em 0 0 rgba(0,0,0,0), 0.6em 0 0 rgba(0,0,0,0); }
+        40% { color: #555; text-shadow: 0.3em 0 0 rgba(0,0,0,0), 0.6em 0 0 rgba(0,0,0,0); }
+        60% { text-shadow: 0.3em 0 0 #555, 0.6em 0 0 rgba(0,0,0,0); }
+        80%, 100% { text-shadow: 0.3em 0 0 #555, 0.6em 0 0 #555; }
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -71,6 +216,7 @@ st.markdown("""
 try:
     engine = get_comparison_engine()
     variant_names = engine.get_variant_names()
+    variant_descriptions = engine.get_all_variant_descriptions()
 except Exception as e:
     st.error(f"Error initializing comparison engine: {str(e)}")
     st.error("Make sure the baseline RAG API is running at " + API_URL)
@@ -89,6 +235,12 @@ if "last_results" not in st.session_state:
 if "comparison_report" not in st.session_state:
     st.session_state.comparison_report = None
 
+if "progress_status" not in st.session_state:
+    st.session_state.progress_status = {"message": "", "progress": 0, "active": False, "data": {}}
+
+if "detailed_stages" not in st.session_state:
+    st.session_state.detailed_stages = []
+
 # Page header
 st.title("Enhanced RAG Comparison Tool")
 st.caption("Compare different RAG approaches for security policy questions")
@@ -103,9 +255,10 @@ with st.sidebar:
     **Available RAG Variants:**
     """)
     
-    # List all variants
+    # List all variants with descriptions
     for variant in variant_names:
-        st.markdown(f"- **{variant}**")
+        with st.expander(f"**{variant}**"):
+            st.markdown(variant_descriptions[variant])
     
     st.markdown("""
     **Evaluation Metrics:**
@@ -121,6 +274,13 @@ with st.sidebar:
     
     # Benchmark section
     st.header("Benchmark")
+
+    # Create placeholder for progress information
+    progress_placeholder = st.empty()
+    status_placeholder = st.empty()
+    animation_placeholder = st.empty()
+    detail_placeholder = st.empty()
+
     with st.form("benchmark_form"):
         default_questions = (
             "What is NovaTech's password policy?\n"
@@ -136,30 +296,176 @@ with st.sidebar:
         )
         
         run_full_benchmark = st.form_submit_button("Run Full Benchmark")
-    
+
+    # Store benchmark state in session
+    if "benchmark_state" not in st.session_state:
+        st.session_state.benchmark_state = {
+            "running": False,
+            "questions": [],
+            "current_question_index": 0,
+            "current_variant_index": 0,
+            "results": [],
+            "status": "",
+            "progress": 0.0
+        }
+
+    # Process benchmark
     if run_full_benchmark and benchmark_questions:
+        # Parse questions
         questions = [q.strip() for q in benchmark_questions.split("\n") if q.strip()]
+        
         if questions:
-            # Show progress
-            progress_container = st.empty()
-            progress_bar = progress_container.progress(0)
-            status_text = st.empty()
+            # Initialize benchmark state
+            st.session_state.benchmark_state = {
+                "running": True,
+                "questions": questions,
+                "current_question_index": 0,
+                "current_variant_index": 0,
+                "results": [],
+                "status": "Starting benchmark...",
+                "progress": 0.0
+            }
+
+    # Continue processing if benchmark is running
+    if st.session_state.benchmark_state["running"]:
+        state = st.session_state.benchmark_state
+        
+        # Display current progress
+        progress_placeholder.progress(state["progress"])
+        status_placeholder.info(state["status"])
+        
+        # Show a brain animation with the SVG
+        animation_placeholder.markdown("""
+        <div style="width:100%; height:160px; background-color:#f0f7ff; border-radius:10px; padding:20px; position:relative; overflow:hidden; margin-bottom:20px; text-align:center;">
+            <div style="width:80px; height:80px; margin:0 auto; animation:pulse 2s infinite;">
+                <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                    <g>
+                        <path fill="#6c8ebf" d="M45.6,18.7,41,14.9V7.5a1,1,0,0,0-.6-.9L30.5,2.1h-.4l-.6.2L24,5.9,18.5,2.2,17.9,2h-.4L7.6,6.6a1,1,0,0,0-.6.9v7.4L2.4,18.7a.8.8,0,0,0-.4.8v9H2a.8.8,0,0,0,.4.8L7,33.1v7.4a1,1,0,0,0,.6.9l9.9,4.5h.4l.6-.2L24,42.1l5.5,3.7.6.2h.4l9.9-4.5a1,1,0,0,0,.6-.9V33.1l4.6-3.8a.8.8,0,0,0,.4-.7V19.4h0A.8.8,0,0,0,45.6,18.7Zm-5.1,6.8H42v1.6l-3.5,2.8-.4.3-.4-.2a1.4,1.4,0,0,0-2,.7,1.5,1.5,0,0,0,.6,2l.7.3h0v5.4l-6.6,3.1-4.2-2.8-.7-.5V25.5H27a1.5,1.5,0,0,0,0-3H25.5V9.7l.7-.5,4.2-2.8L37,9.5v5.4h0l-.7.3a1.5,1.5,0,0,0-.6,2,1.4,1.4,0,0,0,1.3.9l.7-.2.4-.2.4.3L42,20.9v1.6H40.5a1.5,1.5,0,0,0,0,3ZM21,25.5h1.5V38.3l-.7.5-4.2,2.8L11,38.5V33.1h0l.7-.3a1.5,1.5,0,0,0,.6-2,1.4,1.4,0,0,0-2-.7l-.4.2-.4-.3L6,27.1V25.5H7.5a1.5,1.5,0,0,0,0-3H6V20.9l3.5-2.8.4-.3.4.2.7.2a1.4,1.4,0,0,0,1.3-.9,1.5,1.5,0,0,0-.6-2L11,15h0V9.5l6.6-3.1,4.2,2.8.7.5V22.5H21a1.5,1.5,0,0,0,0,3Z"/>
+                        <path fill="#6c8ebf" d="M13.9,9.9a1.8,1.8,0,0,0,0,2.2l2.6,2.5v2.8l-4,4v5.2l4,4v2.8l-2.6,2.5a1.8,1.8,0,0,0,0,2.2,1.5,1.5,0,0,0,1.1.4,1.5,1.5,0,0,0,1.1-.4l3.4-3.5V29.4l-4-4V22.6l4-4V13.4L16.1,9.9A1.8,1.8,0,0,0,13.9,9.9Z"/>
+                        <path fill="#6c8ebf" d="M31.5,14.6l2.6-2.5a1.8,1.8,0,0,0,0-2.2,1.8,1.8,0,0,0-2.2,0l-3.4,3.5v5.2l4,4v2.8l-4,4v5.2l3.4,3.5a1.7,1.7,0,0,0,2.2,0,1.8,1.8,0,0,0,0-2.2l-2.6-2.5V30.6l4-4V21.4l-4-4Z"/>
+                    </g>
+                </svg>
+            </div>
+            <div style="position:absolute; bottom:15px; width:100%; text-align:center; left:0; color:#555; font-weight:bold; font-size:14px;">
+                RAG processing<span style="overflow:hidden; display:inline-block; animation:dots 1.5s steps(5,end) infinite;">...</span>
+            </div>
+        </div>
+
+        <style>
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes dots {
+            0% { width: 0px; }
+            33% { width: 10px; }
+            66% { width: 20px; }
+            100% { width: 30px; }
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        if state["current_question_index"] < len(state["questions"]):
+            # Get current question
+            question = state["questions"][state["current_question_index"]]
             
-            status_text.text("Initializing benchmark...")
+            # Show current question information
+            detail_placeholder.markdown(f"""
+            <div class="info-box">
+                <b>Processing question {state['current_question_index']+1}/{len(state['questions'])}:</b> {question}
+            </div>
+            """, unsafe_allow_html=True)
             
+            # Process single question
             try:
-                # Run benchmark for all questions
-                benchmark_df = engine.run_benchmark(questions)
+                # Get all responses for this question
+                if state["current_variant_index"] == 0:
+                    # Start processing this question
+                    status_placeholder.info(f"Processing question {state['current_question_index']+1}/{len(state['questions'])}: Getting responses")
+                    
+                    # Get responses for all variants
+                    responses = engine.query_all_variants(question)
+                    
+                    # Store responses temporarily in session state
+                    st.session_state.temp_responses = responses
+                    
+                    # Update state
+                    state["current_variant_index"] = 1
+                    state["status"] = f"Processing question {state['current_question_index']+1}/{len(state['questions'])}: Evaluating responses"
+                    state["progress"] = (state["current_question_index"] + 0.5) / len(state["questions"])
+                    
+                    # Force rerun to update UI
+                    st.rerun()
+                else:
+                    # Evaluate responses
+                    responses = st.session_state.temp_responses
+                    
+                    # Create evaluation dataframe for current question
+                    baseline_response = responses.get("Baseline RAG", "")
+                    question_results = []
+                    
+                    for variant_name, response in responses.items():
+                        # Show current variant being evaluated
+                        status_placeholder.info(f"Evaluating {variant_name} for question {state['current_question_index']+1}/{len(state['questions'])}")
+                        
+                        # Evaluate this response
+                        evaluation = engine.evaluate_response(question, response, baseline_response)
+                        
+                        # Create a row with results
+                        row = {
+                            "question": question,
+                            "variant": variant_name,
+                            "response": response
+                        }
+                        
+                        # Add metrics
+                        for metric, score in evaluation["metrics"].items():
+                            row[f"metric_{metric}"] = score
+                        
+                        # Add to results
+                        question_results.append(row)
+                    
+                    # Add results from this question to overall results
+                    state["results"].extend(question_results)
+                    
+                    # Move to next question
+                    state["current_question_index"] += 1
+                    state["current_variant_index"] = 0
+                    state["progress"] = state["current_question_index"] / len(state["questions"])
+                    state["status"] = f"Completed question {state['current_question_index']}/{len(state['questions'])}"
+                    
+                    # Remove temporary data
+                    if "temp_responses" in st.session_state:
+                        del st.session_state.temp_responses
+                    
+                    # Force rerun to process next question
+                    st.rerun()
+            except Exception as e:
+                # Display error
+                st.error(f"Error processing benchmark: {str(e)}")
+                state["running"] = False
+        else:
+            # Benchmark complete
+            status_placeholder.success("Benchmark completed!")
+            progress_placeholder.progress(1.0)
+            animation_placeholder.empty()  # Remove animation when complete
+            detail_placeholder.empty()
+            
+            # Create final dataframe
+            if state["results"]:
+                benchmark_df = pd.DataFrame(state["results"])
                 
                 # Store in session state
                 st.session_state.benchmark_results = benchmark_df
                 
-                # Complete progress
-                progress_bar.progress(1.0)
-                status_text.success("Benchmark completed!")
+                # Save results
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                os.makedirs("results", exist_ok=True)  # Ensure results directory exists
+                benchmark_df.to_csv(f"results/benchmark_final_{timestamp}.csv", index=False)
                 
                 # Provide download link
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
                 csv = benchmark_df.to_csv(index=False)
                 st.download_button(
                     label="Download Results CSV",
@@ -167,10 +473,47 @@ with st.sidebar:
                     file_name=f"rag_benchmark_{timestamp}.csv",
                     mime="text/csv"
                 )
+            
+            # Reset benchmark state
+            state["running"] = False
+
+# Display progress status if active
+if st.session_state.progress_status["active"]:
+    st.markdown("### Current Progress")
+    
+    # Main progress bar
+    st.progress(st.session_state.progress_status["progress"])
+    
+    # Current status message
+    st.info(st.session_state.progress_status["message"])
+    
+    # Show detailed progress information when available
+    if st.session_state.progress_status["data"]:
+        data = st.session_state.progress_status["data"]
+        
+        if "current_question" in data:
+            q_num = data.get("question_num", 0)
+            q_total = data.get("total_questions", 0)
+            
+            st.markdown(f"""
+            <div class="info-box">
+                <b>Current Question ({q_num}/{q_total}):</b> {data['current_question']}
+            </div>
+            """, unsafe_allow_html=True)
+    
+    # Show detailed stage tracker
+    if st.session_state.detailed_stages:
+        with st.expander("View detailed progress", expanded=True):
+            st.markdown('<div class="stage-tracker">', unsafe_allow_html=True)
+            
+            for i, stage in enumerate(st.session_state.detailed_stages):
+                status = "✅" if stage["completed"] else "⏳"
+                st.markdown(f"**{status} {stage['message']}** <span class='progress-detail'>({stage['timestamp']})</span>", unsafe_allow_html=True)
                 
-            except Exception as e:
-                status_text.error(f"Error running benchmark: {str(e)}")
-                progress_container.empty()
+                if i < len(st.session_state.detailed_stages) - 1:
+                    st.markdown("<hr style='margin: 0.5rem 0;'>", unsafe_allow_html=True)
+            
+            st.markdown('</div>', unsafe_allow_html=True)
 
 # Main content area
 tabs = st.tabs(["Interactive Comparison", "Benchmark Results"])
@@ -209,15 +552,47 @@ with tabs[0]:
         st.session_state.last_query = query
         
         # Show progress
+        progress_container = st.empty()
+        status_text = st.empty()
+        progress_detail = st.empty()
+        
         with st.spinner("Generating and evaluating responses..."):
-            # Get responses from all variants
-            responses = engine.query_all_variants(query)
+            # Initialize progress
+            progress_bar = progress_container.progress(0)
+            status_text.info("Initializing comparison...")
+            
+            # Define progress callback
+            def update_interactive_progress(message, progress, data=None):
+                progress_bar.progress(progress)
+                status_text.info(message)
+                if data and "current_variant" in data:
+                    progress_detail.markdown(f"Processing variant: **{data['current_variant']}**")
+            
+            # Get responses from all variants with progress updates
+            def update_variant_progress(message, progress):
+                update_interactive_progress(
+                    message, progress, 
+                    {"current_variant": message.replace("Generating response using ", "").replace("Completed ", "")}
+                )
+                
+            responses = engine.query_all_variants(query, update_variant_progress)
+            
+            # Update progress
+            progress_bar.progress(0.5)
+            status_text.info("Evaluating responses...")
             
             # Store results in session state
             st.session_state.last_results = responses
             
             # Generate comparison report
+            progress_bar.progress(0.8)
+            status_text.info("Generating comparison report...")
             st.session_state.comparison_report = engine.generate_comparison_report(query, responses)
+            
+            # Complete progress
+            progress_bar.progress(1.0)
+            status_text.success("Comparison complete!")
+            progress_detail.empty()
     
     # Display results if available
     if st.session_state.last_query and st.session_state.last_results is not None:
@@ -238,6 +613,9 @@ with tabs[0]:
         for i, (variant_name, tab) in enumerate(zip(responses.keys(), variant_tabs)):
             with tab:
                 response = responses[variant_name]
+                
+                # Display variant description
+                st.markdown(f'<div class="variant-description">{variant_descriptions[variant_name]}</div>', unsafe_allow_html=True)
                 
                 # Evaluate this response
                 baseline_response = responses.get("Baseline RAG", "")
@@ -447,6 +825,9 @@ with tabs[1]:
                     variant_data = question_df[question_df['variant'] == variant].iloc[0]
                     
                     with st.expander(f"{variant} (Avg Score: {row['average']:.2f})"):
+                        # Display the variant description
+                        st.markdown(f"**About this approach:** {variant_descriptions[variant]}")
+                        st.markdown("---")
                         st.markdown(variant_data['response'])
         
         # Add download button for full results
@@ -459,7 +840,7 @@ with tabs[1]:
             mime="text/csv"
         )
     else:
-        st.info("Run a benchmark from the sidebar to see results here.")
+        st.info("Run a benchmark from the sidebar to see results here. The prcess may take even 15 minutes to complete.")
         st.markdown("""
         The benchmark will:
         1. Process each question with all 7 RAG variants
